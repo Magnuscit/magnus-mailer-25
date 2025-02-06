@@ -1,8 +1,13 @@
-import { createClient } from "@libsql/client";
+import postgres from "postgres";
 
-const turso = createClient({
-  url: process.env.TURSO_DATABASE_URL || "",
-  authToken: process.env.TURSO_AUTH_TOKEN,
+const connectionString = process.env.SUPBASE_URI || "";
+const db = postgres(connectionString, {
+  ssl: {
+    rejectUnauthorized: false,
+  },
+  transform: {
+    undefined: null,
+  },
 });
 
-export default turso;
+export default db;

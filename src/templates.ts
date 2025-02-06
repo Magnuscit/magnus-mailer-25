@@ -26,7 +26,7 @@ const sendBoardingPass = async (
                     <tr style="height: 15vh">
                        <td>&nbsp;</td>
                        <td colspan="2" align="center">
-                          <img src="https://raw.githubusercontent.com/cittakshashila/backend/ses/docs/asserts/tklogo.png" alt="logo"/>
+                          <img src="https://ik.imagekit.io/lovelin/magnus%20mail.png?updatedAt=1738836507322" alt="logo"/>
                        </td>
                       <td>&nbsp;</td>
                     </tr>
@@ -65,7 +65,7 @@ const sendBoardingPass = async (
                                 <p>
                                 <img alt="qr" width="172px" height="172px" src="cid:qr">
                                 </p>
-                                <img src="https://raw.githubusercontent.com/cittakshashila/backend/ses/docs/asserts/tklogo.png" alt="logo" width="136px" height="32px">
+                                <img src="https://ik.imagekit.io/lovelin/magnus%20mail.png?updatedAt=1738836507322" alt="logo" width="136px" height="32px">
                              </div>
                           </div>
                        <div>
@@ -139,7 +139,7 @@ const sendConfirmation = async (
          <tr style="height: 15vh">
             <td>&nbsp;</td>
             <td colspan="2" align="center">
-               <img src="https://raw.githubusercontent.com/cittakshashila/backend/ses/docs/asserts/tklogo.png" alt="logo"/>
+               <img src="https://ik.imagekit.io/lovelin/magnus%20mail.png?updatedAt=1738836507322" alt="logo"/>
             </td>
             <td>&nbsp;</td>
          </tr>
@@ -149,9 +149,9 @@ const sendConfirmation = async (
                   Hi ${userName},
                   <br><br>
                   We have received your registration for ${eventName} at Magnus'25! 🎉  
-                  We are currently <strong>processing your payment</strong> and verifying your details. Please wait a little while as we complete the verification.  
+                  We are currently <strong>processing your payment</strong>(if applicable) and verifying your details. Please wait a little while as we complete the verification.  
                   <br><br>
-                  Once your payment is confirmed, we will send you your <strong>boarding pass</strong> via email. 📩  
+                  Once your registration is confirmed by our end, we will send you your <strong>boarding pass</strong> via email. 📩  
                   <br><br>
                   <strong>Important:</strong> Sometimes our emails may end up in your spam folder. Please check there if you don’t receive a confirmation soon!  
                   <br><br>
