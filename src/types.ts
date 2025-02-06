@@ -10,4 +10,14 @@ interface WebhookData {
   responses: WebhookResponse[];
 }
 
-export { WebhookData };
+interface ConfirmedUsers {
+  event: string;
+  emails: string[];
+  action: string;
+}
+
+interface LoginRequestBody {
+  password: string;
+}
+
+export { WebhookData, ConfirmedUsers, LoginRequestBody };
