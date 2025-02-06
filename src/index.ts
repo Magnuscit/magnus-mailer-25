@@ -21,16 +21,7 @@ fastify.post(
     const webhookData = request.body as WebhookData;
     console.log("Received form data:", webhookData);
 
-    const EVENT_ID = webhookData.event as string;
-
-    const fetchEvent = await db.execute({
-      sql: "SELECT name FROM events WHERE id = ?",
-      args: [EVENT_ID],
-    });
-
-    console.log(fetchEvent);
-    const eventName = fetchEvent.rows[0].name as string;
-    console.log("Event Name:", eventName);
+    const EVENT = webhookData.event as string;
 
     const userData = [];
     const promises = [];
@@ -48,10 +39,11 @@ fastify.post(
     userData.push({
       name: teamLeadName,
       email: teamLeadEmail,
+      event: EVENT,
       college: teamLeadCollegeName,
     });
 
-    promises.push(sendConfirmation(teamLeadEmail, teamLeadName, eventName));
+    promises.push(sendConfirmation(teamLeadEmail, teamLeadName, EVENT));
 
     const numberOfMembers = Number(
       webhookData.responses
@@ -78,16 +70,17 @@ fastify.post(
         userData.push({
           name: memberName,
           email: memberEmail,
+          event: EVENT,
           college: memberCollege,
         });
-        promises.push(sendConfirmation(memberEmail, memberName, eventName));
+        promises.push(sendConfirmation(memberEmail, memberName, EVENT));
       }
     }
     await Promise.allSettled(promises);
 
     const query = `
-      INSERT INTO registrations (name, email, event_id, college)
-      VALUES ${userData.map(() => "(?, ?, ?, ?)").join(", ")}
+      INSERT INTO registrations (name, email, event, college, present, confirmed)
+      VALUES ${userData.map(() => "(?, ?, ?, ?, 0, 0)").join(", ")}
       ON CONFLICT (email, event) DO NOTHING;
     `;
     try {
@@ -96,7 +89,7 @@ fastify.post(
         args: userData.flatMap((data) => [
           data.name,
           data.email,
-          EVENT_ID,
+          data.event,
           data.college,
         ]),
       });
