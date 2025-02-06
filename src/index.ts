@@ -39,7 +39,6 @@ fastify.post(
     userData.push({
       name: teamLeadName,
       email: teamLeadEmail,
-      event: EVENT,
       college: teamLeadCollegeName,
     });
 
@@ -70,7 +69,6 @@ fastify.post(
         userData.push({
           name: memberName,
           email: memberEmail,
-          event: EVENT,
           college: memberCollege,
         });
         promises.push(sendConfirmation(memberEmail, memberName, EVENT));
@@ -79,8 +77,8 @@ fastify.post(
     await Promise.allSettled(promises);
 
     const query = `
-      INSERT INTO registrations (name, email, event, college, present, confirmed)
-      VALUES ${userData.map(() => "(?, ?, ?, ?, 0, 0)").join(", ")}
+      INSERT INTO registrations (name, email, event, college)
+      VALUES ${userData.map(() => "(?, ?, ?, ?)").join(", ")}
       ON CONFLICT (email, event) DO NOTHING;
     `;
     try {
@@ -89,7 +87,7 @@ fastify.post(
         args: userData.flatMap((data) => [
           data.name,
           data.email,
-          data.event,
+          EVENT,
           data.college,
         ]),
       });
