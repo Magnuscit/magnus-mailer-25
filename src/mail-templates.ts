@@ -213,9 +213,9 @@ const sendConfirmation = async (
   };
   try {
     await ses.sendMail(data);
-    console.log(`boarding pass sent successfully to ${userEmail}`);
+    console.log(`confirmation sent successfully to ${userEmail}`);
   } catch (error) {
-    console.error(`Error sending boarding pass to email: ${userEmail}:`, error);
+    console.error(`Error sending confirmation email: ${userEmail}:`, error);
   }
 };
 
@@ -308,9 +308,9 @@ const sendRejection = async (
   };
   try {
     await ses.sendMail(data);
-    console.log(`boarding pass sent successfully to ${userEmail}`);
+    console.log(`rejection sent successfully to ${userEmail}`);
   } catch (error) {
-    console.error(`Error sending boarding pass to email: ${userEmail}:`, error);
+    console.error(`Error sending rejection to email: ${userEmail}:`, error);
   }
 };
 
