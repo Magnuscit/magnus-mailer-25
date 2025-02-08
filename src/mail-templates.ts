@@ -8,13 +8,20 @@ const sendBoardingPass = async (
   eventName: string,
 ) => {
   const qr = await QRCode.toDataURL(userEmail);
+  const qrData = qr.replace(/^data:image\/png;base64,/, "");
   const data = {
     from: process.env.SES_VERIFIED_EMAIL,
     to: userEmail,
     attachments: [
       {
-        filename: "qr.png",
-        path: qr,
+        filename: `${userEmail}-qr.png`,
+        content: qrData,
+        encoding: "base64",
+      },
+      {
+        filename: `${userEmail}-qr-embedded.png`,
+        content: qrData,
+        encoding: "base64",
         cid: "qr",
       },
     ],
