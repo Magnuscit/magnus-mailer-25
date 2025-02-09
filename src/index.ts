@@ -15,8 +15,8 @@ Sentry.setupFastifyErrorHandler(fastify);
 
 fastify.register(cors, {
   origin: [
-    "http://localhost:3000",
     "http://localhost:5173",
+    "http://localhost:3000",
     "https://magnus-25-verification-portal.vercel.app",
   ],
 });
@@ -26,7 +26,7 @@ fastify.get("/", async (_request: FastifyRequest, _reply: FastifyReply) => {
 });
 
 fastify.get("/events", Portal.fetchEvents);
-fastify.post("/login", Portal.fetchEvents);
+fastify.post("/login", Portal.login);
 fastify.post("/send-confirmation", Portal.sendConfirmation);
 
 fastify.post("/submit-form", Gfrom.hook);
