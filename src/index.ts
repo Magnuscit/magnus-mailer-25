@@ -1,4 +1,4 @@
-import { Sentry } from "./config";
+import { Sentry } from "@/config";
 import Fastify from "fastify";
 import { FastifyRequest, FastifyReply } from "fastify";
 import cors from "@fastify/cors";
