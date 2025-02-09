@@ -1,7 +1,7 @@
 import { FastifyRequest, FastifyReply } from "fastify";
-import { sql } from "../config";
-import { WebhookData } from "../types";
-import { sendConfirmation } from "../mail-templates";
+import { sql } from "@/config";
+import { WebhookData } from "@/types";
+import { sendConfirmation } from "@/mail-templates";
 
 const hook = async (request: FastifyRequest, _reply: FastifyReply) => {
   const webhookData = request.body as WebhookData;
@@ -63,12 +63,13 @@ const hook = async (request: FastifyRequest, _reply: FastifyReply) => {
       promises.push(sendConfirmation(memberEmail, memberName, eventName));
     }
   }
-  await Promise.allSettled(promises);
   const dbInsertion = await sql`
         INSERT INTO registrations (name, email, event_id, college)
         VALUES ${sql(userData.map((data) => [data.name, data.email, EVENT_ID, data.college]))}
         ON CONFLICT (email, event_id) DO NOTHING
-      `;
+  `;
+
+  await Promise.allSettled(promises);
   console.log("Registrations inserted successfully", dbInsertion);
 };
 

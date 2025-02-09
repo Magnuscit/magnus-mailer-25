@@ -1,8 +1,8 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import { LoginRequestBody, ConfirmedUsers } from "../types";
-import { sql } from "../config";
-import { createSHA256Hash } from "../utils";
-import { sendBoardingPass, sendRejection } from "../mail-templates";
+import { LoginRequestBody, ConfirmedUsers } from "@/types";
+import { sql } from "@/config";
+import { createSHA256Hash } from "@/utils";
+import { sendBoardingPass, sendRejection } from "@/mail-templates";
 
 const PASSWORD = process.env.PORTAL_PWD || "";
 
