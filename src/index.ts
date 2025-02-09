@@ -1,8 +1,8 @@
-import { Sentry } from "@/config";
+import { Sentry } from "./config";
 import Fastify from "fastify";
 import { FastifyRequest, FastifyReply } from "fastify";
 import cors from "@fastify/cors";
-import { Gfrom, Portal } from "@/controllers";
+import { Gfrom, Portal } from "./controllers";
 
 import dotenv from "dotenv";
 dotenv.config();

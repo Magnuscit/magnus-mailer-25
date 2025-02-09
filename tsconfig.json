@@ -2,10 +2,6 @@
   "include": ["src/**/*"],
   "exclude": ["node_modules"],
   "compilerOptions": {
-    "baseUrl": "./", // This is the base directory to resolve non-relative module names
-    "paths": {
-      "@/*": ["src/*"]
-    },
     "target": "es2020",                                  /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */
     "module": "commonjs",                                /* Specify what module code is generated. */
     "rootDir": "./src",                                  /* Specify the root folder within your source files. */

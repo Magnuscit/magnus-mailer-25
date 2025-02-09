@@ -1,5 +1,5 @@
 import QRCode from "qrcode";
-import { ses } from "@/config";
+import { ses } from "./config";
 
 const sendBoardingPass = async (
   userEmail: string,
