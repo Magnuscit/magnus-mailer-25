@@ -2,7 +2,7 @@ import { Sentry } from "./config";
 import Fastify from "fastify";
 import { FastifyRequest, FastifyReply } from "fastify";
 import cors from "@fastify/cors";
-import { Gfrom, Portal } from "./controllers";
+import { Gfrom, Admin } from "./controllers";
 
 import dotenv from "dotenv";
 dotenv.config();
@@ -25,9 +25,9 @@ fastify.get("/", async (_request: FastifyRequest, _reply: FastifyReply) => {
   return "za-warudo";
 });
 
-fastify.get("/events", Portal.fetchEvents);
-fastify.post("/login", Portal.login);
-fastify.post("/send-confirmation", Portal.sendConfirmation);
+fastify.get("/events", Admin.fetchEvents);
+fastify.post("/login", Admin.login);
+fastify.post("/send-confirmation", Admin.sendConfirmation);
 
 fastify.post("/submit-form", Gfrom.hook);
 

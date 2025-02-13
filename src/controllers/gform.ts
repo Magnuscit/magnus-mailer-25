@@ -26,11 +26,15 @@ const hook = async (request: FastifyRequest, _reply: FastifyReply) => {
   const teamLeadEmail = webhookData.responses
     .find((response) => response.question.trim() === "Email")
     ?.answer.trim() as string;
+  const teamLeadPhone = webhookData.responses
+    .find((response) => response.question.trim() === "Contact No.")
+    ?.answer.trim() as string;
 
   userData.push({
     name: teamLeadName,
     email: teamLeadEmail,
     college: teamLeadCollegeName,
+    phone: teamLeadPhone,
   });
 
   promises.push(sendConfirmation(teamLeadEmail, teamLeadName, eventName));
@@ -53,19 +57,25 @@ const hook = async (request: FastifyRequest, _reply: FastifyReply) => {
     const memberEmail = webhookData.responses
       .find((response) => response.question.trim() === `Member ${i} Email`)
       ?.answer.trim() as string;
+    const memberPhone = webhookData.responses
+      .find(
+        (response) => response.question.trim() === `Member ${i} Contact No.`,
+      )
+      ?.answer.trim() as string;
 
     if (memberName && memberEmail) {
       userData.push({
         name: memberName,
         email: memberEmail,
         college: memberCollege,
+        phone: memberPhone,
       });
       promises.push(sendConfirmation(memberEmail, memberName, eventName));
     }
   }
   const dbInsertion = await sql`
-        INSERT INTO registrations (name, email, event_id, college)
-        VALUES ${sql(userData.map((data) => [data.name, data.email, EVENT_ID, data.college]))}
+        INSERT INTO registrations (name, email, event_id, college, phone)
+        VALUES ${sql(userData.map((data) => [data.name, data.email, EVENT_ID, data.college, data.phone]))}
         ON CONFLICT (email, event_id) DO NOTHING
   `;
 
