@@ -20,4 +20,17 @@ interface LoginRequestBody {
   password: string;
 }
 
-export { WebhookData, ConfirmedUsers, LoginRequestBody };
+interface OnDeskRegistrationDetails {
+  events: string[];
+  name: string;
+  college: string;
+  phone: string;
+  email: string;
+}
+
+export {
+  WebhookData,
+  ConfirmedUsers,
+  LoginRequestBody,
+  OnDeskRegistrationDetails,
+};

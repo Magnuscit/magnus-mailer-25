@@ -1,5 +1,9 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import { LoginRequestBody, ConfirmedUsers } from "../types";
+import {
+  LoginRequestBody,
+  ConfirmedUsers,
+  OnDeskRegistrationDetails,
+} from "../types";
 import { sql } from "../config";
 import { createSHA256Hash } from "../utils";
 import { sendBoardingPass, sendRejection } from "../mail-templates";
@@ -67,7 +71,7 @@ const sendConfirmation = async (
   let mailPromises: Promise<any>[] = [];
   if (action.trim() === "accept") {
     mailPromises = registrationRows.map((row) =>
-      sendBoardingPass(row.email, row.name, row.college, eventName),
+      sendBoardingPass(row.email, row.name, row.college, [eventName]),
     );
   } else {
     mailPromises = registrationRows.map((row) =>
@@ -78,10 +82,52 @@ const sendConfirmation = async (
   reply.send({ success: true, updated: registrationRows.length });
 };
 
+const onDeskRegistration = async (
+  request: FastifyRequest<{ Body: OnDeskRegistrationDetails }>,
+  reply: FastifyReply,
+) => {
+  const { email, college, phone, name, events } = request.body;
+  if (events.length === 0 || !email || !name) {
+    return reply.code(400).send({
+      error: "Invalid input. Missing events or email or name.",
+    });
+  }
+  const registrationRows =
+    await sql`INSERT INTO registrations (name, email, event_id, college, phone)
+            VALUES ${sql(events.map((event) => [name, email, event, college, phone]))}
+            ON CONFLICT (email, event_id) DO NOTHING`;
+
+  const eventNames = await sql`
+    SELECT name FROM events
+    WHERE id = ANY(${events})
+  `;
+  await sendBoardingPass(
+    email,
+    name,
+    college,
+    eventNames.map((event) => event.name),
+  );
+  reply.send({ success: true, updated: registrationRows.length });
+};
+
+const fetchUserEvents = async (
+  request: FastifyRequest<{ Body: { email: string } }>,
+  reply: FastifyReply,
+) => {
+  const { email } = request.body;
+
+  const fetchEvents =
+    await sql`SELECT event_id FROM registrations WHERE email = ${email}`;
+  const events = fetchEvents.map((event) => event.event_id);
+  reply.status(200).send({ events });
+};
+
 const PortalControllers = {
   sendConfirmation,
   fetchEvents,
   login,
+  onDeskRegistration,
+  fetchUserEvents,
 };
 
 export default PortalControllers;

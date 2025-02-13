@@ -5,7 +5,7 @@ const sendBoardingPass = async (
   userEmail: string,
   userName: string,
   userClg: string,
-  eventName: string,
+  events: string[],
 ) => {
   try {
     const qrDataUrl = await QRCode.toDataURL(userEmail);
@@ -13,14 +13,13 @@ const sendBoardingPass = async (
 
     const plainText = `Hi ${userName},
 
-Congratulations! You are now officially registered for ${eventName} at Magnus'25!
+Congratulations! You are now officially registered for ${events.join(", ")} at Magnus'25!
 Your boarding pass is attached to this email.
 
 Best regards,
 Team Magnus
 CSE-AIML
 Chennai Institute of Technology`;
-
     const htmlContent = `
 <html>
   <body>
@@ -37,7 +36,7 @@ Chennai Institute of Technology`;
             <td colspan="4" style="font-family: monospace; vertical-align: center; padding: 2em">
               <p>
                 Hi ${userName},<br><br>
-                Congratulations!🎉 You are now officially registered for <strong>${eventName}</strong> at Magnus'25! 🎟️✨ Get ready to showcase your skills, explore new ideas, and experience an event like never before.<br><br>
+                Congratulations!🎉 You are now officially registered for <strong>${events.join(", ")}</strong> at Magnus'25! 🎟️✨ Get ready to showcase your skills, explore new ideas, and experience an event like never before.<br><br>
                 <li>Your event pass is attached to this mail</li>
                 <li>Check our website for event rules, regulations, and schedules</li>
                 <br>
@@ -56,7 +55,7 @@ Chennai Institute of Technology`;
                   <div style="width:70%; border:2px dashed #a0a0a0; border-radius: 15px; text-align: left; padding: 10px;">
                      <p style="font-size: 10px; margin: 6px 0 0 10px;">Boarding<br/>Date: 17 Feb 2025</p>
                      <p style="font-size: 10px; margin: 8px 0 0 10px;">from ${userClg} to Chennai Institute of Technology</p>
-                     <p style="font-size: 20px; margin: 50px 0 0 5px;">${eventName}</p>
+                     <p style="font-size: 17px; margin: 40px 0 0 5px;">${events.join(", ")}</p>
                   </div>
                   <div style="background: #ececec; border-radius: 15px; width: 30%; padding: 40px 10px;">
                      <p>
@@ -119,7 +118,7 @@ Chennai Institute of Technology`;
     const rawEmail = [
       `From: ${process.env.SES_VERIFIED_EMAIL}`,
       `To: ${userEmail}`,
-      `Subject: Welcome to ${eventName} at Magnus'25! 🚀`,
+      `Subject: Welcome to Magnus'25! 🚀`,
       `MIME-Version: 1.0`,
       `Content-Type: multipart/mixed; boundary="${boundaryMixed}"`,
       ``,

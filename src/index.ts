@@ -28,6 +28,8 @@ fastify.get("/", async (_request: FastifyRequest, _reply: FastifyReply) => {
 fastify.get("/events", Admin.fetchEvents);
 fastify.post("/login", Admin.login);
 fastify.post("/send-confirmation", Admin.sendConfirmation);
+fastify.post("/on-desk-registration", Admin.onDeskRegistration);
+fastify.post("/user-events", Admin.fetchUserEvents);
 
 fastify.post("/submit-form", Gfrom.hook);
 
