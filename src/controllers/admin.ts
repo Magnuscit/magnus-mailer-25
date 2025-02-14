@@ -3,6 +3,7 @@ import {
   LoginRequestBody,
   ConfirmedUsers,
   OnDeskRegistrationDetails,
+  UserPresentForEvent,
 } from "../types";
 import { sql } from "../config";
 import { createSHA256Hash } from "../utils";
@@ -122,12 +123,52 @@ const fetchUserEvents = async (
   reply.status(200).send({ events });
 };
 
+const userAttendance = async (
+  request: FastifyRequest<{ Body: UserPresentForEvent }>,
+  reply: FastifyReply,
+) => {
+  const { email, event } = request.body;
+  const registrations =
+    await sql`SELECT present FROM registrations WHERE email = ${email} AND event_id = ${event}`;
+  if (registrations.length == 0) {
+    reply.status(400).send({
+      message: `No registration found with email: ${email} and event: ${event}`,
+    });
+  }
+  const registration = registrations[0]; // should be only one row due to PKEY, hopefully
+  if (!registration.present) {
+    await sql`
+      UPDATE registrations
+      SET present = TRUE
+      WHERE email = ${email} AND event_id = ${event}
+  `;
+    reply
+      .status(200)
+      .send({ message: "Registration updated to present true." });
+  } else {
+    reply.status(400).send({ message: "User is already marked as present." });
+  }
+};
+
+const individualEventRegistrations = async (
+  request: FastifyRequest<{ Body: { event: string } }>,
+  reply: FastifyReply,
+) => {
+  const { event } = request.body;
+  const eventRegistrations = await sql`
+    SELECT name, email, college, phone, present, confirmed FROM registrations WHERE event_id = ${event}
+`;
+  reply.status(200).send({ event, registrations: eventRegistrations });
+};
+
 const PortalControllers = {
   sendConfirmation,
   fetchEvents,
   login,
   onDeskRegistration,
   fetchUserEvents,
+  userAttendance,
+  individualEventRegistrations,
 };
 
 export default PortalControllers;

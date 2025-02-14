@@ -28,9 +28,15 @@ interface OnDeskRegistrationDetails {
   email: string;
 }
 
+interface UserPresentForEvent {
+  email: string;
+  event: string;
+}
+
 export {
   WebhookData,
   ConfirmedUsers,
   LoginRequestBody,
   OnDeskRegistrationDetails,
+  UserPresentForEvent,
 };
