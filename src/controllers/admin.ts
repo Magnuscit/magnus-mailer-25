@@ -54,7 +54,7 @@ const sendConfirmation = async (
     emails.length === 0
   ) {
     return reply
-      .code(400)
+      .status(400)
       .send({ error: "Invalid input. Missing event or emails." });
   }
   let registrationRows;
@@ -96,7 +96,7 @@ const onDeskRegistration = async (
 ) => {
   const { email, college, phone, name, events } = request.body;
   if (events.length === 0 || !email || !name) {
-    return reply.code(400).send({
+    return reply.status(400).send({
       error: "Invalid input. Missing events or email or name.",
     });
   }
