@@ -34,6 +34,13 @@ const login = async (
   }
 };
 
+const footfall = async (_request: FastifyRequest, reply: FastifyReply) => {
+  const footfallCount = await sql`
+    SELECT COUNT(*) from registrations; 
+  `;
+  reply.status(200).send({ count: Number(footfallCount[0].count) });
+};
+
 const sendConfirmation = async (
   request: FastifyRequest<{ Body: ConfirmedUsers }>,
   reply: FastifyReply,
@@ -169,6 +176,7 @@ const PortalControllers = {
   fetchUserEvents,
   userAttendance,
   individualEventRegistrations,
+  footfall,
 };
 
 export default PortalControllers;

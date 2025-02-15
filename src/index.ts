@@ -27,6 +27,7 @@ fastify.get("/", async (_request: FastifyRequest, _reply: FastifyReply) => {
 });
 
 fastify.get("/events", Admin.fetchEvents);
+fastify.get("/footfall", Admin.footfall);
 fastify.post("/login", Admin.login);
 fastify.post("/send-confirmation", Admin.sendConfirmation);
 fastify.post("/on-desk-registration", Admin.onDeskRegistration);
