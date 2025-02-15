@@ -18,7 +18,7 @@ const fetchEvents = async (_request: FastifyRequest, reply: FastifyReply) => {
     events[event.id] = event.name;
   }
   console.log("Fetched Events:", events);
-  reply.status(200).send(events);
+  return reply.status(200).send(events);
 };
 
 const login = async (
@@ -28,9 +28,9 @@ const login = async (
   const requestBody = request.body;
   const userPasswordHash = createSHA256Hash(requestBody?.password);
   if (userPasswordHash === PASSWORD) {
-    reply.status(200).send("correct");
+    return reply.status(200).send("correct");
   } else {
-    reply.status(401).send("wrong");
+    return reply.status(401).send("wrong");
   }
 };
 
@@ -38,7 +38,7 @@ const footfall = async (_request: FastifyRequest, reply: FastifyReply) => {
   const footfallCount = await sql`
     SELECT COUNT(*) from registrations; 
   `;
-  reply.status(200).send({ count: Number(footfallCount[0].count) });
+  return reply.status(200).send({ count: Number(footfallCount[0].count) });
 };
 
 const sendConfirmation = async (
@@ -87,7 +87,7 @@ const sendConfirmation = async (
     );
   }
   await Promise.allSettled(mailPromises);
-  reply.send({ success: true, updated: registrationRows.length });
+  return reply.send({ success: true, updated: registrationRows.length });
 };
 
 const onDeskRegistration = async (
@@ -100,10 +100,17 @@ const onDeskRegistration = async (
       error: "Invalid input. Missing events or email or name.",
     });
   }
-  const registrationRows =
-    await sql`INSERT INTO registrations (name, email, event_id, college, phone)
-            VALUES ${sql(events.map((event) => [name, email, event, college, phone]))}
-            ON CONFLICT (email, event_id) DO NOTHING`;
+  const registrationRows = await sql`INSERT INTO registrations ${sql(
+    events.map((event) => ({
+      name,
+      email,
+      event_id: event,
+      college,
+      phone,
+      confirmed: true,
+    })),
+  )}
+  ON CONFLICT (email, event_id) DO NOTHING`;
 
   const eventNames = await sql`
     SELECT name FROM events
@@ -115,7 +122,7 @@ const onDeskRegistration = async (
     college,
     eventNames.map((event) => event.name),
   );
-  reply.send({ success: true, updated: registrationRows.length });
+  return reply.send({ success: true, updated: registrationRows.length });
 };
 
 const fetchUserEvents = async (
@@ -127,7 +134,7 @@ const fetchUserEvents = async (
   const fetchEvents =
     await sql`SELECT event_id FROM registrations WHERE email = ${email}`;
   const events = fetchEvents.map((event) => event.event_id);
-  reply.status(200).send({ events });
+  return reply.status(200).send({ events });
 };
 
 const userAttendance = async (
@@ -138,7 +145,7 @@ const userAttendance = async (
   const registrations =
     await sql`SELECT present FROM registrations WHERE email = ${email} AND event_id = ${event}`;
   if (registrations.length == 0) {
-    reply.status(400).send({
+    return reply.status(400).send({
       message: `No registration found with email: ${email} and event: ${event}`,
     });
   }
@@ -149,12 +156,13 @@ const userAttendance = async (
       SET present = TRUE
       WHERE email = ${email} AND event_id = ${event}
   `;
-    reply
+    return reply
       .status(200)
       .send({ message: "Registration updated to present true." });
-  } else {
-    reply.status(400).send({ message: "User is already marked as present." });
   }
+  return reply
+    .status(400)
+    .send({ message: "User is already marked as present." });
 };
 
 const individualEventRegistrations = async (
@@ -165,7 +173,7 @@ const individualEventRegistrations = async (
   const eventRegistrations = await sql`
     SELECT name, email, college, phone, present, confirmed FROM registrations WHERE event_id = ${event}
 `;
-  reply.status(200).send({ event, registrations: eventRegistrations });
+  return reply.status(200).send({ event, registrations: eventRegistrations });
 };
 
 const PortalControllers = {
