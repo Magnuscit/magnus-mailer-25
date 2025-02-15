@@ -19,6 +19,7 @@ fastify.register(cors, {
     "http://localhost:3000",
     "http://localhost:8081",
     "https://magnus-25-verification-portal.vercel.app",
+    "https://magnus-25-admin-dashboard.vercel.app",
   ],
 });
 
