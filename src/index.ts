@@ -20,6 +20,7 @@ fastify.register(cors, {
     "http://localhost:8081",
     "https://magnus-25-verification-portal.vercel.app",
     "https://magnus-25-admin-dashboard.vercel.app",
+    "https://magnus-25-live-registrations.vercel.app",
   ],
 });
 
@@ -34,6 +35,7 @@ fastify.post("/send-confirmation", Admin.sendConfirmation);
 fastify.post("/on-desk-registration", Admin.onDeskRegistration);
 fastify.post("/user-events", Admin.fetchUserEvents);
 fastify.post("/user-attendance", Admin.userAttendance);
+fastify.get("/all-registrations", Admin.fetchRegistrations);
 fastify.post(
   "/individual-event-registrations",
   Admin.individualEventRegistrations,

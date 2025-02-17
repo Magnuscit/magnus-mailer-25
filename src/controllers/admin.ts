@@ -21,6 +21,14 @@ const fetchEvents = async (_request: FastifyRequest, reply: FastifyReply) => {
   return reply.status(200).send(events);
 };
 
+const fetchRegistrations = async (
+  _request: FastifyRequest,
+  reply: FastifyReply,
+) => {
+  const allRegistrations = await sql`SELECT * FROM registrations`;
+  return allRegistrations;
+};
+
 const login = async (
   request: FastifyRequest<{ Body: LoginRequestBody }>,
   reply: FastifyReply,
@@ -185,6 +193,7 @@ const PortalControllers = {
   userAttendance,
   individualEventRegistrations,
   footfall,
+  fetchRegistrations,
 };
 
 export default PortalControllers;
